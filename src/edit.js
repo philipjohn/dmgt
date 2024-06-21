@@ -1,23 +1,12 @@
 /**
- * Retrieves the translation of text.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
+ * WordPress Dependencies.
  */
 import { __ } from '@wordpress/i18n';
-
-/**
- * React hook that is used to mark the block wrapper element.
- * It provides all the necessary props like the class name.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
- */
 import { useBlockProps } from '@wordpress/block-editor';
+import { useEffect, useState } from '@wordpress/element';
 
 /**
- * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
- * Those files can contain any CSS code that gets applied to the editor.
- *
- * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
+ * Internal dependencies.
  */
 import './editor.scss';
 
@@ -29,10 +18,44 @@ import './editor.scss';
  *
  * @return {Element} Element to render.
  */
-export default function Edit() {
+export default function Edit( { attributes, setAttributes } ) {
+
+	// Setup the block props, including our custom class name.
+	const blockProps = useBlockProps(
+		{
+			className: 'dmg-read-more',
+		}
+	);
+
+	// Extract the postID and linkText attributes.
+	const { postID, linkText } = attributes;
+
+	// Set state for the post title and link.
+	const [ postTitle, setPostTitle ] = useState( '' );
+	const [ postLink, setPostLink ] = useState( '' );
+
+	// Fetch the post data and set the link title and URL.
+	useEffect( () => {
+		// Get the post object.
+		async function fetchPostData() {
+			const response = await wp.apiFetch( { path: `/wp/v2/posts/${ postID }` } );
+			if ( ! response ) {
+				return;
+			}
+
+			setPostTitle( response.title.rendered );
+			setPostLink( response.link );
+		}
+		fetchPostData();
+	}, [] );
+
 	return (
-		<p { ...useBlockProps() }>
-			{ __( 'Dmgt – hello from the editor!', 'dmgt' ) }
+		<p { ...blockProps }>
+			{ postLink ? (
+				<>{ linkText }: <a href={ postLink }>{ postTitle }</a></>
+			) : (
+				__( 'No post selected.', 'dmgt' )
+			) }
 		</p>
 	);
 }
