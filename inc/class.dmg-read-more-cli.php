@@ -46,11 +46,18 @@ class Dmg_Read_More_CLI {
 	private $fields = [ 'ID' ];
 
 	/**
-	 * Results limit. Default: -1 (no limit).
+	 * Results limit. Default: 100
 	 *
 	 * @var int
 	 */
-	private $limit = -1;
+	private $limit = 100;
+
+	/**
+	 * Pagination offset.
+	 *
+	 * @var int
+	 */
+	private $offset = 0;
 
 	/**
 	 * Register the WP-CLI command.
@@ -85,6 +92,11 @@ class Dmg_Read_More_CLI {
 			$this->limit = WP_CLI\Utils\get_flag_value( $assoc_args, 'limit' );
 		}
 
+		// Set the offset for pagination.
+		if ( isset( $assoc_args['offset'] ) ) {
+			$this->offset = WP_CLI\Utils\get_flag_value( $assoc_args, 'offset' );
+		}
+
 		// Do the search and output the results.
 		$this->do_search();
 		$this->output_results();
@@ -104,6 +116,7 @@ class Dmg_Read_More_CLI {
 			[
 				'post_type'      => 'post',
 				'posts_per_page' => $this->limit,
+				'offset'         => $this->offset,
 				's'              => $search_string,
 			]
 		);
@@ -111,6 +124,16 @@ class Dmg_Read_More_CLI {
 		// If there are no results, output a message and return.
 		if ( 0 === $results->found_posts ) {
 			WP_CLI::error( 'No read more blocks found.' );
+		}
+
+		// Check if we there are more results than the limit.
+		if ( $results->found_posts > $this->limit && 0 === $this->offset ) {
+			WP_CLI::warning(
+				sprintf(
+					'More than %d results found. Use the --limit and --offset flags to paginate.',
+					$this->limit
+				)
+			 );
 		}
 
 		// Set the posts property with the results of the search filtered to the fields we want.
