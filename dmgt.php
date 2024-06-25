@@ -1,16 +1,16 @@
 <?php
 /**
- * Plugin Name:       Dmgt
- * Description:       Example block scaffolded with Create Block tool.
- * Requires at least: 6.1
- * Requires PHP:      7.0
+ * Plugin Name:       DMGT Read More
+ * Description:       Provides a block to show a read more link for a selected post, and a CLI command to find instances of the block in post content.
+ * Requires at least: 6.5.5
+ * Requires PHP:      8.0
  * Version:           0.1.0
- * Author:            The WordPress Contributors
+ * Author:            Philip John
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       dmgt
  *
- * @package CreateBlock
+ * @package Dmg_Read_More
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
