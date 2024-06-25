@@ -28,3 +28,8 @@ function create_block_dmgt_block_init() {
 	register_block_type( __DIR__ . '/build' );
 }
 add_action( 'init', 'create_block_dmgt_block_init' );
+
+// Include the CLI class. We may want to consider an autoloader if this plugin grows.
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	include_once __DIR__ . '/inc/class.dmg-read-more-cli.php';
+}
