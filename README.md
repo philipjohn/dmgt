@@ -19,13 +19,13 @@ Example: `wp dmg-read-more search`
 
 By default the CLI command will return a simple list of IDs in CSV format (so one ID per line) and be limited to 100 results to avoid breaking all the things. There are arguments available to adapt the results:
 
-* `format` Default: csv
+* `format` Default: csv\
   Choose the format to use for the output - one of `table`, `json`, `csv`, `yaml` or `count`.
-* `fields` Default: ID
+* `fields` Default: ID\
   A comma-separated list of fields to include in the output.
-* `limit` Default: 100.
+* `limit` Default: 100\
   Choose the number of posts to return. Don't make this too high or bad things could happen!
-* `offset` Default: 0
+* `offset` Default: 0\
   Use this to get the next set of results. E.g. set this to 100 to skip the first 100 results.
 
 ## Local Development
