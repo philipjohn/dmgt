@@ -17,7 +17,11 @@ import { useBlockProps } from '@wordpress/block-editor';
  */
 export default function save( { attributes } ) {
 	return (
-		<p { ...useBlockProps.save() }>
+		<p { ...useBlockProps.save(
+			{
+				className: 'dmg-read-more',
+			}
+		) }>
 			Read more: <a href={ attributes.postUrl }>{ attributes.postTitle }</a>
 		</p>
 	);

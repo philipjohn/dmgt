@@ -200,7 +200,9 @@ function save({
   attributes
 }) {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save()
+    ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save({
+      className: 'dmg-read-more'
+    })
   }, "Read more: ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: attributes.postUrl
   }, attributes.postTitle));
