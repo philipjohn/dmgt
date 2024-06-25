@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       DMGT Read More
  * Description:       Provides a block to show a read more link for a selected post, and a CLI command to find instances of the block in post content.
- * Requires at least: 6.5.5
+ * Requires at least: 6.5.0
  * Requires PHP:      8.0
  * Version:           0.1.0
  * Author:            Philip John
