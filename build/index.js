@@ -196,10 +196,14 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @return {Element} Element to render.
  */
-function save() {
+function save({
+  attributes
+}) {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save()
-  }, 'Dmgt – hello from the saved content!');
+  }, "Read more: ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: attributes.postUrl
+  }, attributes.postTitle));
 }
 
 /***/ }),

@@ -15,10 +15,10 @@ import { useBlockProps } from '@wordpress/block-editor';
  *
  * @return {Element} Element to render.
  */
-export default function save() {
+export default function save( { attributes } ) {
 	return (
 		<p { ...useBlockProps.save() }>
-			{ 'Dmgt – hello from the saved content!' }
+			Read more: <a href={ attributes.postUrl }>{ attributes.postTitle }</a>
 		</p>
 	);
 }
