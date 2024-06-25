@@ -20,11 +20,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./editor.scss */ "./src/editor.scss");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _editor_scss__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./editor.scss */ "./src/editor.scss");
 
 /**
  * WordPress Dependencies.
  */
+
 
 
 
@@ -51,36 +54,58 @@ function Edit({
     className: 'dmg-read-more'
   });
 
-  // Extract the postID and linkText attributes.
+  // Extract the postTitle and postUrl attributes.
   const {
-    postID,
-    linkText
+    postTitle,
+    postUrl
   } = attributes;
 
-  // Set state for the post title and link.
-  const [postTitle, setPostTitle] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useState)('');
-  const [postLink, setPostLink] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useState)('');
+  // Use State for post search results.
+  const [posts, setPosts] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useState)([]);
 
   // Fetch the post data and set the link title and URL.
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
-    // Get the post object.
-    async function fetchPostData() {
+    // Get a list of 5 recent posts to show as suggestions.
+    async function fetchRecentPosts() {
       const response = await wp.apiFetch({
-        path: `/wp/v2/posts/${postID}`
+        path: '/wp/v2/posts?per_page=5'
       });
       if (!response) {
         return;
       }
-      setPostTitle(response.title.rendered);
-      setPostLink(response.link);
+      const latest = response.map(post => ({
+        label: post.title.rendered,
+        value: post.link
+      }));
+      setPosts(latest);
     }
-    fetchPostData();
+    fetchRecentPosts();
   }, []);
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+
+  // Update attributes when a post is selected from search results.
+  const selectPost = value => {
+    // `value` is the post URL, so find the corresponding entry in the posts array.
+    const post = posts.find(post => post.value === value);
+    if (!post) {
+      return;
+    }
+    setAttributes({
+      postTitle: post.label,
+      postUrl: post.value
+    });
+  };
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InspectorControls, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelBody, {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Post Settings', 'dmgt')
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ComboboxControl, {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Search for a post', 'dmgt'),
+    placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Type to search...', 'dmgt'),
+    options: posts,
+    onChange: selectPost
+  })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
     ...blockProps
-  }, postLink ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, linkText, ": ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: postLink
-  }, postTitle)) : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('No post selected.', 'dmgt'));
+  }, postUrl ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, "Read more: ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: postUrl
+  }, postTitle)) : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('No post selected.', 'dmgt')));
 }
 
 /***/ }),
@@ -233,6 +258,16 @@ module.exports = window["wp"]["blocks"];
 
 /***/ }),
 
+/***/ "@wordpress/components":
+/*!************************************!*\
+  !*** external ["wp","components"] ***!
+  \************************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["components"];
+
+/***/ }),
+
 /***/ "@wordpress/element":
 /*!*********************************!*\
   !*** external ["wp","element"] ***!
@@ -259,7 +294,7 @@ module.exports = window["wp"]["i18n"];
   \************************/
 /***/ ((module) => {
 
-module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"dmgt/read-more-post-link","version":"0.1.0","title":"Read More Post Link","category":"widgets","icon":"admin-links","description":"Insert a read more link to a specific post using this block.","attributes":{"postID":{"type":"number","default":1},"linkText":{"type":"string","default":"Read More"}},"example":{},"supports":{"html":false},"textdomain":"dmgt","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js"}');
+module.exports = /*#__PURE__*/JSON.parse('{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"name":"dmgt/read-more-post-link","version":"0.1.0","title":"Read More Post Link","category":"widgets","icon":"admin-links","description":"Insert a read more link to a specific post using this block.","attributes":{"postTitle":{"type":"string","default":"Hello, World!"},"postUrl":{"type":"string","default":"/?p=1"}},"example":{},"supports":{"html":false},"textdomain":"dmgt","editorScript":"file:./index.js","editorStyle":"file:./index.css","style":"file:./style-index.css","viewScript":"file:./view.js"}');
 
 /***/ })
 

@@ -8,13 +8,13 @@
 	"icon": "admin-links",
 	"description": "Insert a read more link to a specific post using this block.",
 	"attributes": {
-		"postID": {
-			"type": "number",
-			"default": 1
-		},
-		"linkText": {
+		"postTitle": {
 			"type": "string",
-			"default": "Read More"
+			"default": "Hello, World!"
+		},
+		"postUrl": {
+			"type": "string",
+			"default": "/?p=1"
 		}
 	},
 	"example": {},
