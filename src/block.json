@@ -1,12 +1,22 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "create-block/dmgt",
+	"name": "dmgt/read-more-post-link",
 	"version": "0.1.0",
-	"title": "Dmgt",
+	"title": "Read More Post Link",
 	"category": "widgets",
-	"icon": "smiley",
-	"description": "Example block scaffolded with Create Block tool.",
+	"icon": "admin-links",
+	"description": "Insert a read more link to a specific post using this block.",
+	"attributes": {
+		"postTitle": {
+			"type": "string",
+			"default": "Hello, World!"
+		},
+		"postUrl": {
+			"type": "string",
+			"default": "/?p=1"
+		}
+	},
 	"example": {},
 	"supports": {
 		"html": false
