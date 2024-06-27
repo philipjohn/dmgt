@@ -67,6 +67,26 @@ export default function Edit( { attributes, setAttributes } ) {
 		} );
 	}
 
+	const searchPosts = async ( search ) => {
+		// Bail if there is no search term or it's under 3 characters.
+		if ( ! search || search.length < 3 ) {
+			setPosts( [] );
+			return;
+		}
+
+		const response = await wp.apiFetch( { path: `/wp/v2/posts?search=${ search }` } );
+		if ( ! response ) {
+			return;
+		}
+
+		const results = response.map( ( post ) => ( {
+			label: post.title.rendered,
+			value: post.link
+		} ) );
+
+		setPosts( results );
+	}
+
 	return (
 		<>
 			<InspectorControls>
@@ -76,6 +96,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							label={ __( 'Search for a post', 'dmgt' ) }
 							placeholder={ __( 'Type to search...', 'dmgt' ) }
 							options={ posts }
+							onFilterValueChange={ searchPosts }
 							onChange={ selectPost }
 						/>
 					</PanelBody>
