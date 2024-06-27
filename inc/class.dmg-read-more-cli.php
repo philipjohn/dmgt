@@ -90,6 +90,12 @@ class Dmg_Read_More_CLI {
 		// Set the limit for the number of results.
 		if ( isset( $assoc_args['limit'] ) ) {
 			$this->limit = WP_CLI\Utils\get_flag_value( $assoc_args, 'limit' );
+
+			// If the limit is greater than 100, tell the user it will be set to 100.
+			if ( $this->limit > 100 || $this->limit < 0 ) {
+				WP_CLI::warning( 'You have specified a limit greater than 100. This will be forced back to 100 to avoid bad things happening.' );
+				$this->limit = 100;
+			}
 		}
 
 		// Set the offset for pagination.
