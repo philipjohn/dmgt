@@ -60,6 +60,20 @@ class Dmg_Read_More_CLI {
 	private $offset = 0;
 
 	/**
+	 * Date before which to search.
+	 *
+	 * @var string
+	 */
+	private $date_before;
+
+	/**
+	 * Date after which to search.
+	 *
+	 * @var string
+	 */
+	private $date_after;
+
+	/**
 	 * Register the WP-CLI command.
 	 *
 	 * @return void
@@ -103,6 +117,28 @@ class Dmg_Read_More_CLI {
 			$this->offset = WP_CLI\Utils\get_flag_value( $assoc_args, 'offset' );
 		}
 
+		// Set the date_before argument.
+		if ( isset( $assoc_args['date_before'] ) ) {
+			// Make sure the date is in the format YYYY-MM-DD.
+			$date_before = WP_CLI\Utils\get_flag_value( $assoc_args, 'date_before' );
+			if ( ! preg_match( '/\d{4}-\d{2}-\d{2}/', $date_before ) ) {
+				WP_CLI::error( 'The date_before argument must be in the format YYYY-MM-DD.' );
+			}
+
+			$this->date_before = WP_CLI\Utils\get_flag_value( $assoc_args, 'date_before' );
+		}
+
+		// Set the date_after argument.
+		if ( isset( $assoc_args['date_after'] ) ) {
+			// Make sure the date is in the format YYYY-MM-DD.
+			$date_after = WP_CLI\Utils\get_flag_value( $assoc_args, 'date_after' );
+			if ( ! preg_match( '/\d{4}-\d{2}-\d{2}/', $date_after ) ) {
+				WP_CLI::error( 'The date_after argument must be in the format YYYY-MM-DD.' );
+			}
+
+			$this->date_after = WP_CLI\Utils\get_flag_value( $assoc_args, 'date_after' );
+		}
+
 		// Do the search and output the results.
 		$this->do_search();
 		$this->output_results();
@@ -118,14 +154,35 @@ class Dmg_Read_More_CLI {
 	private function do_search(): void {
 		// Get the posts containing our Read More Post Link block.
 		$search_string = 'wp:dmgt/read-more-post-link';
-		$results       = new WP_Query(
-			[
-				'post_type'      => 'post',
-				'posts_per_page' => $this->limit,
-				'offset'         => $this->offset,
-				's'              => $search_string,
-			]
-		);
+		$search_args   = [
+			'post_type'      => 'post',
+			'posts_per_page' => $this->limit,
+			'offset'         => $this->offset,
+			's'              => $search_string,
+			'date_query'     => [
+				'after'  => '30 days ago',
+			],
+		];
+
+		// If we have any dates set, reset the date query.
+		if ( isset( $this->date_before ) || isset( $this->date_after ) ) {
+			$date_query = [];
+
+			// If we have a before date, set it.
+			if ( isset( $this->date_before ) ) {
+				$date_query['before'] = $this->date_before;
+			}
+
+			// If we have an after date, set it.
+			if ( isset( $this->date_after ) ) {
+				$date_query['after'] = $this->date_after;
+			}
+
+			$search_args['date_query'] = $date_query;
+		}
+
+		// Run the query.
+		$results = new WP_Query( $search_args );
 
 		// If there are no results, output a message and return.
 		if ( 0 === $results->found_posts ) {
