@@ -1,0 +1,17 @@
+{
+    "name": "philipjohn/dmgt",
+    "description": "Provides a block to show a read more link for a selected post, and a CLI command to find instances of the block in post content.",
+    "type": "wordpress-plugin",
+    "require-dev": {
+        "phpstan/phpstan": "^1.11",
+        "wp-phpunit/wp-phpunit": "^6.5",
+        "yoast/phpunit-polyfills": "^2.0"
+    },
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Philip John",
+            "email": "phil@philipjohn.me.uk"
+        }
+    ]
+}
