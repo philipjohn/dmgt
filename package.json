@@ -14,7 +14,8 @@
 		"plugin-zip": "wp-scripts plugin-zip",
 		"start": "npm-run-all start:env start:scripts",
 		"start:env": "wp-env start",
-		"start:scripts": "wp-scripts start"
+		"start:scripts": "wp-scripts start",
+		"tests:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/dmgt ./vendor/bin/phpunit"
 	},
 	"devDependencies": {
 		"@wordpress/env": "^10.1.0",
